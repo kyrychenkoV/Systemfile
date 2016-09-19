@@ -1,1 +1,25 @@
 HELP!
+--myDir: Mon Sep 19 14:22:00 2016
+--anyDir: Mon Sep 19 14:22:00 2016
+--help: Mon Sep 19 14:22:00 2016
+--myDir: Mon Sep 19 14:22:57 2016
+--anyDir: Mon Sep 19 14:22:57 2016
+--help: Mon Sep 19 14:22:57 2016
+--myDir: Mon Sep 19 14:28:27 2016
+--myDir: Mon Sep 19 14:29:30 2016
+--myDir: Mon Sep 19 14:30:08 2016
+--myDir: Mon Sep 19 14:43:30 2016
+--anyDir: Mon Sep 19 14:43:30 2016
+--help: Mon Sep 19 14:43:30 2016
+--myDir: Mon Sep 19 14:43:54 2016
+--anyDir: Mon Sep 19 14:43:54 2016
+--help: Mon Sep 19 14:43:54 2016
+--myDir: Mon Sep 19 14:45:56 2016
+--anyDir: Mon Sep 19 14:45:56 2016
+--help: Mon Sep 19 14:45:56 2016
+--myDir: Mon Sep 19 14:47:26 2016
+--anyDir: Mon Sep 19 14:47:26 2016
+--help: Mon Sep 19 14:47:26 2016
+--myDir: Mon Sep 19 14:48:33 2016
+--anyDir: Mon Sep 19 14:48:33 2016
+--help: Mon Sep 19 14:48:33 2016
