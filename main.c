@@ -3,24 +3,26 @@
 #include <dirent.h>
 #include <time.h>
 #include <stdlib.h>
+#include <string.h>
+#define size 40
 void outData();
 void outputFolder(struct dirent *pointer,DIR *dir);
 void outputSpeciffolder(struct dirent *pointer,DIR *dir,char *directory);
-void logFile(struct dirent *pointer,char *directory);
+void logFile(struct dirent *pointer);
 void addFile();
 void outputHelpToscreen();
-void times();
+
+void outputLogstoScreen();
 
 int main() {
     outData();
     return 0;
 }
+
 void outData(){
+    addFile();
     struct dirent *pointer;
-    char *directory="c:/Program Files";
-    logFile(pointer,directory);
-
-
+    logFile(pointer);
 }
 
 void outputFolder(struct dirent *pointer,DIR *dir){
@@ -34,15 +36,15 @@ void outputFolder(struct dirent *pointer,DIR *dir){
         printf(" %s \n",
                pointer->d_name);
     }
-
     closedir(dir);
 }
+
 void outputSpeciffolder(struct dirent *pointer,DIR *dir,char *directory){
-    printf("The files in the c:Program files/Git\n");
+    printf(directory,"\n");
     dir = opendir(directory);
     if (!dir) {
         perror("diropen");
-        exit(1);
+        //exit(1);
     }
     while ( (pointer = readdir(dir))) {
         printf(" %s \n",
@@ -51,9 +53,9 @@ void outputSpeciffolder(struct dirent *pointer,DIR *dir,char *directory){
     closedir(dir);
 }
 
-void logFile(struct dirent *pointer,char *directory){
+void logFile(struct dirent *pointer){
     FILE* myfile;
-    myfile = fopen("help.txt","a");
+    myfile = fopen("logs.txt","a+");
 
     DIR *dir;
     struct tm *ptr;
@@ -61,36 +63,44 @@ void logFile(struct dirent *pointer,char *directory){
     It = time(NULL);
     ptr = localtime(&It);
 
-    printf("Do you want to open a current directory Y/N\n");
-    char a,b,c;
-    scanf("%c",&a);
-    getchar();
-    if (a=='Y'){
-        outputFolder(pointer,dir);
-        fprintf(myfile, "--myDir: %s", asctime(ptr));
+    char *pdir="--dir";
+    char *phelp="--help";
+    char *pexit="--exit";
+    char *plogs="--logs";
+    char q[size];
+    int i;
+    while(1){
+        printf("->");
+        gets (q);
+        i = 0;
+        while ( q[i] != '\0' ){
+            i ++;
+        }
+        if (!strcmp(plogs,q)){
+            outputLogstoScreen();
+            fprintf(myfile, "--logs: %s", asctime(ptr));
+        }
+        if (!strcmp(pdir,q)){
+            outputFolder(pointer,dir);
+            fprintf(myfile, "--myDir: %s", asctime(ptr));
+        }
+        if (!strcmp(phelp,q)){
+            outputHelpToscreen();
+            fprintf(myfile, "--help: %s", asctime(ptr));
+        }
+        if(!strcmp(pexit,q)){
+            break;
+        }
+        if (strcmp(pdir,q)&&strcmp(phelp,q)&&strcmp(pexit,q)&&strcmp(plogs,q)){
+            outputSpeciffolder(pointer,dir,q);
+            fprintf(myfile, "--anyDir: %s", asctime(ptr));
+        }
     }
-    printf("Do you want to open a any directory Y/N\n");
-    scanf("%c",&b);
-    getchar();
-    if (b=='Y'){
-        outputSpeciffolder(pointer,dir,directory);
-        fprintf(myfile, "--anyDir: %s", asctime(ptr));
-    }
-    printf("Do you want to open a help file Y/N\n");
-    scanf("%c",&c);
-    getchar();
-    if (c=='Y'){
-        outputHelpToscreen();
-        fprintf(myfile, "--help: %s", asctime(ptr));
-    }
-    printf("\n");
-    times();
-
 }
-void addFile(){         //add file help.txt end file write word "HELP!"
-    FILE* myfile; myfile = fopen("help.txt","a");
-
-    fprintf(myfile, "%s", times);
+void addFile(){
+    FILE* myfile; myfile = fopen("help.txt","w");
+    char *words="Commands:\n1)--dir\n2)C:\\Program Files\\...\n3)--help\n4)--logs\n5)--exit\n";
+    fprintf(myfile, "%s", words);
     fclose(myfile);
 }
 
@@ -98,21 +108,19 @@ void outputHelpToscreen(){
     FILE *myfile;
     myfile = fopen("help.txt","r");
 
-    char array[20];
-    while (fgets(array,20,myfile)) {
+    char array[size];
+    while (fgets(array,size,myfile)) {
         printf("%s",array);
     }
-
     fclose(myfile);
 }
-void  times(){
-    FILE* myfile;
-    myfile = fopen("help.txt","a");
+void outputLogstoScreen(){
+    FILE *myfile;
+    myfile = fopen("logs.txt","r+");
 
-
-    struct tm *ptr;
-    time_t It;
-    It = time(NULL);
-    ptr = localtime(&It);
+    char array[size];
+    while (fgets(array,size,myfile)) {
+        printf("%s",array);
+    }
+    fclose(myfile);
 }
-
