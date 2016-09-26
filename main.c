@@ -15,9 +15,11 @@ void outputHelpToscreen();
 void outputLogstoScreen();
 
 int main() {
+
     outData();
     return 0;
 }
+
 
 void outData(){
     addFile();
