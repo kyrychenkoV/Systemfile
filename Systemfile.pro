@@ -5,5 +5,4 @@ CONFIG -= qt
 
 SOURCES += main.c
 
-DISTFILES += \
-    1
+DISTFILES +=

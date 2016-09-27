@@ -4,27 +4,28 @@
 #include <time.h>
 #include <stdlib.h>
 #include <string.h>
+
 #define size 40
 void outData();
 void outputFolder(struct dirent *pointer,DIR *dir);
 void outputSpeciffolder(struct dirent *pointer,DIR *dir,char *directory);
-void logFile(struct dirent *pointer);
-void addFile();
-void outputHelpToscreen();
+void logFile(struct dirent *pointer,char *dataTime);
+void addHelpFile();
+char *getCurrentTimeFormate(char *format);
+void outputFileToScrean(char * file);
+int main(int argc, char **argv) {
+    printf("%s", argv[0]);
 
-void outputLogstoScreen();
-
-int main() {
-    //
     outData();
     return 0;
 }
 
 
 void outData(){
-    addFile();
+    addHelpFile();
+    char *dataTime=getCurrentTimeFormate("%Y-%m-%d %X:");
     struct dirent *pointer;
-    logFile(pointer);
+    logFile(pointer,dataTime);
 }
 
 void outputFolder(struct dirent *pointer,DIR *dir){
@@ -55,70 +56,71 @@ void outputSpeciffolder(struct dirent *pointer,DIR *dir,char *directory){
     closedir(dir);
 }
 
-void logFile(struct dirent *pointer){
+void logFile(struct dirent *pointer,char *dataTime){
     FILE* myfile;
-    myfile = fopen("logs.txt","a+");
-
+    myfile = fopen("logs.txt","w");
+    fclose(myfile);
+    myfile = fopen("logs.txt","r+");
     DIR *dir;
-    struct tm *ptr;
-    time_t It;
-    It = time(NULL);
-    ptr = localtime(&It);
 
     char *pdir="--dir";
     char *phelp="--help";
     char *pexit="--exit";
     char *plogs="--logs";
-    char q[size];
+    char userinput[size];
     int i;
+    char cNewLine = '\n';
     while(1){
         printf("->");
-        gets (q);
+        gets (userinput);
+
         i = 0;
-        while ( q[i] != '\0' ){
+        while ( userinput[i] != '\0' ){
             i ++;
         }
-        if (!strcmp(plogs,q)){
-            outputLogstoScreen();
-            fprintf(myfile, "--logs: %s", asctime(ptr));
+        if (!strcmp(plogs,userinput)){
+            fprintf(myfile, "%s%s%c", dataTime,userinput,cNewLine);
+            fflush(myfile);
+            outputFileToScrean("logs.txt");
         }
-        if (!strcmp(pdir,q)){
+        if (!strcmp(pdir,userinput)){
             outputFolder(pointer,dir);
-            fprintf(myfile, "--myDir: %s", asctime(ptr));
         }
-        if (!strcmp(phelp,q)){
-            outputHelpToscreen();
-            fprintf(myfile, "--help: %s", asctime(ptr));
+        if (!strcmp(phelp,userinput)){
+            outputFileToScrean("help.txt");
         }
-        if(!strcmp(pexit,q)){
+        if(!strcmp(pexit,userinput)){
             break;
         }
-        if (strcmp(pdir,q)&&strcmp(phelp,q)&&strcmp(pexit,q)&&strcmp(plogs,q)){
-            outputSpeciffolder(pointer,dir,q);
-            fprintf(myfile, "--anyDir: %s", asctime(ptr));
+        if (strcmp(pdir,userinput)&&strcmp(phelp,userinput)&&strcmp(pexit,userinput)&&strcmp(plogs,userinput)){
+            outputSpeciffolder(pointer,dir,userinput);
         }
+        fprintf(myfile, "%s%s%c", dataTime,userinput,cNewLine);
+        fflush(myfile);
     }
+    fclose(myfile);
 }
-void addFile(){
+void addHelpFile(){
     FILE* myfile; myfile = fopen("help.txt","w");
     char *words="Commands:\n1)--dir\n2)C:\\Program Files\\...\n3)--help\n4)--logs\n5)--exit\n";
     fprintf(myfile, "%s", words);
     fclose(myfile);
 }
+char *getCurrentTimeFormate(char *format){
+    time_t rawtime;
+    struct tm * timeinfo;
+    static char buffer[128]="";
 
-void outputHelpToscreen(){
-    FILE *myfile;
-    myfile = fopen("help.txt","r");
+    time ( &rawtime );
+    timeinfo = localtime ( &rawtime );
 
-    char array[size];
-    while (fgets(array,size,myfile)) {
-        printf("%s",array);
-    }
-    fclose(myfile);
+    strftime (buffer,128,format,timeinfo);
+
+    return buffer;
 }
-void outputLogstoScreen(){
+void outputFileToScrean(char * file){
     FILE *myfile;
-    myfile = fopen("logs.txt","r+");
+    myfile = fopen(file,"r");
 
     char array[size];
     while (fgets(array,size,myfile)) {
